@@ -22,16 +22,22 @@ export const metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <ClerkProvider>
       <html lang="en">
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <body className={`font-sans ${inter.variable}`}>
-          <Nav />
-          <main className="pt-20">{children}</main>
+          <div>
+            <Nav />
+            <main className="pt-20">{children}</main>
+            {modal}
+          </div>
+          <div id="modal-root" />
         </body>
       </html>
     </ClerkProvider>

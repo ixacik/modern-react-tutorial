@@ -1,35 +1,52 @@
-import { db } from "@/server/db";
 import Image from "next/image";
 import ImageUploader from "./_components/ImageUploader";
-
+import { getImages } from "@/server/queries";
+import Link from "next/link";
+import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
-  const images = await db.query.images.findMany();
-
+export default function HomePage() {
   return (
     <div>
       <div className="bg-card p-4">
         <ImageUploader />
       </div>
       <div className="grid grid-cols-5 gap-4">
-        {images.map((image) => (
-          <div
-            key={image.id}
-            className="bg-card border-border overflow-hidden rounded-lg border p-4"
-          >
-            <div className="relative h-[200px] w-full">
-              <Image
-                src={image.url}
-                alt={image.name}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="pt-2">{image.name}</div>
-          </div>
-        ))}
+        <Suspense fallback={<ImageDisplayLoading />}>
+          <ImageDisplay />
+        </Suspense>
       </div>
     </div>
   );
+}
+
+function ImageDisplayLoading() {
+  return (
+    <>
+      <div className="h-64 animate-pulse rounded-lg bg-gray-800" />
+      <div className="h-64 animate-pulse rounded-lg bg-gray-800" />
+      <div className="h-64 animate-pulse rounded-lg bg-gray-800" />
+      <div className="h-64 animate-pulse rounded-lg bg-gray-800" />
+      <div className="h-64 animate-pulse rounded-lg bg-gray-800" />
+      <div className="h-64 animate-pulse rounded-lg bg-gray-800" />
+      <div className="h-64 animate-pulse rounded-lg bg-gray-800" />
+    </>
+  );
+}
+
+async function ImageDisplay() {
+  const images = await getImages();
+
+  return images?.map((image) => (
+    <Link
+      href={`/img/${image.id}`}
+      key={image.id}
+      className="bg-card border-border overflow-hidden rounded-lg border p-4"
+    >
+      <div className="relative h-[200px] w-full">
+        <Image src={image.url} alt={image.name} fill className="object-cover" />
+      </div>
+      <div className="pt-2">{image.name}</div>
+    </Link>
+  ));
 }
