@@ -1,15 +1,15 @@
 import Image from "next/image";
-import ImageUploader from "./_components/ImageUploader";
 import { getImages } from "@/server/queries";
 import Link from "next/link";
 import { Suspense } from "react";
+import { UploadButton } from "./_components/UploadButton";
 export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   return (
     <div>
-      <div className="bg-card p-4">
-        <ImageUploader />
+      <div className="bg-card flex w-full justify-center p-4">
+        <UploadButton />
       </div>
       <div className="grid grid-cols-5 gap-4">
         <Suspense fallback={<ImageDisplayLoading />}>
